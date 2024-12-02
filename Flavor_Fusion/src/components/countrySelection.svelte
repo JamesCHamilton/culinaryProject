@@ -26,7 +26,7 @@
 
 <!--Button-->
 <select name="country" id="country" required
-class="text-black  bg-white hover:bg-grey focus:ring-4 focus:outline-black focus:ring-black font-medium rounded-lg text-sm px-20 py-2.5 text-center inline-flex items-center dark:bg-slate-200 hover:bg-gray-200 dark:focus:ring-black">
+class="text-black  bg-white hover:bg-grey focus:ring-4 focus:outline-black focus:ring-black font-medium rounded-lg text-sm px-20 py-2.5 text-center inline-flex items-center dark:bg-slate-200 hover:bg-gray-200 dark:focus:ring-black max-h-[250px] leading-5">
     
     <option value="" disabled selected>Select a country</option>
     
