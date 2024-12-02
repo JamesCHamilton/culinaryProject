@@ -18,6 +18,7 @@
             </h2>
         </div>
 
+        <!--There are three fields that will be processed in JS backend, that will determine the next next page loaded-->
         <form 
         class="m-0"
         action="/submit-form"
@@ -74,7 +75,7 @@
 
 
         </form>     
-        
+        <!--Finsih footer-->
     </section>
 
 </main>
