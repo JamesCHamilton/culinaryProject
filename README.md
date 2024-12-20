@@ -32,3 +32,6 @@ Programming Language Mapping
 JDBC - Connects SQL to Java
 
 HTML can be Implemented in Java
+
+Front End Design:
+https://www.figma.com/design/AIzyQAaCOT8pf0Kpae4U1E/Dev-Mode-playground-(Community)?node-id=2771-22857&p=f&t=n2JYYKArFTVCmf01-0
