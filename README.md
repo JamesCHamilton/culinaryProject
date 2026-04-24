@@ -1,7 +1,7 @@
-Ingridient Finder RecoRecipi
+Ingridient Finder FlavorFusion
 
 Steps
-- Get the SQL database
+- Get the Supa database
 - Make Ways to Implement New Information
 - Make Ways to Find the Information(tags)
 - Search Engine(For Users)
@@ -27,11 +27,8 @@ Where to Find the Individual Ingredients
 
 Ways to get information to start this
 
-Programming Language Mapping
+Programming Language Mapping ->
+Django = use for frontend serving and backend
+db = supa
 
-JDBC - Connects SQL to Java
 
-HTML can be Implemented in Java
-
-Front End Design:
-https://www.figma.com/design/AIzyQAaCOT8pf0Kpae4U1E/Dev-Mode-playground-(Community)?node-id=2771-22857&p=f&t=n2JYYKArFTVCmf01-0

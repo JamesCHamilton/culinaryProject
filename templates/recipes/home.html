@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Filters</h5>
+                <form id="filter-form" method="get" action="{% url 'home' %}">
+                    <div class="mb-3">
+                        <input type="text" name="q" class="form-control filter-input" placeholder="Search recipes..." value="{{ request.GET.q }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <select name="country" class="form-select filter-input">
+                            <option value="">All Countries</option>
+                            {% for country in countries %}
+                                <option value="{{ country.name }}" {% if request.GET.country == country.name %}selected{% endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ingredient</label>
+                        <select name="ingredient" class="form-select filter-input">
+                            <option value="">All Ingredients</option>
+                            {% for ingredient in ingredients %}
+                                <option value="{{ ingredient.name }}" {% if request.GET.ingredient == ingredient.name %}selected{% endif %}>{{ ingredient.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dietary Tags</label>
+                        {% for tag in dietary_tags %}
+                            <div class="form-check">
+                                <input class="form-check-input filter-input" type="checkbox" name="tag" value="{{ tag.name }}" id="tag_{{ tag.id }}" {% if tag.name in selected_tags %}checked{% endif %}>
+                                <label class="form-check-label" for="tag_{{ tag.id }}">
+                                    {{ tag.name }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary w-100 mt-2">Clear All Filters</a>
+                </form>
+
+                <script>
+                    const form = document.getElementById('filter-form');
+                    const inputs = document.querySelectorAll('.filter-input');
+                    let timeout = null;
+
+                    inputs.forEach(input => {
+                        input.addEventListener('change', () => {
+                            form.submit();
+                        });
+
+                        // For text input, use a small delay (debounce) so it doesn't refresh on every single keystroke
+                        if (input.type === 'text') {
+                            input.addEventListener('input', () => {
+                                clearTimeout(timeout);
+                                timeout = setTimeout(() => {
+                                    form.submit();
+                                }, 500); // 500ms delay
+                            });
+                        }
+                    });
+                </script>
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="row">
+            {% for recipe in recipes %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 recipe-card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recipe.title }}</h5>
+                            <div class="mb-2">
+                                <span class="text-warning">★ {{ recipe.avg_score|default:0|floatformat:1 }}</span>
+                                <h6 class="card-subtitle mb-2 text-muted d-inline ms-2">{{ recipe.country.name }}</h6>
+                            </div>
+                            <div class="mb-2">
+                                {% for tag in recipe.dietary_tags.all %}
+                                    <span class="badge rounded-pill bg-info text-dark">{{ tag.name }}</span>
+                                {% endfor %}
+                            </div>
+                            <p class="card-text">
+
+                                <strong>Ingredients:</strong>
+                                {% for ingredient in recipe.ingredients.all|slice:":5" %}
+                                    <span class="badge bg-secondary">{{ ingredient.name }}</span>
+                                {% endfor %}
+                                {% if recipe.ingredients.count > 5 %}...{% endif %}
+                            </p>
+                            <a href="{% url 'recipe_detail' recipe.pk %}" class="btn btn-outline-danger">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info">No recipes found. Try adjusting your search or filters.</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

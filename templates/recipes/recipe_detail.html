@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ recipe.title }}</li>
+                  </ol>
+                </nav>
+                
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="card-title text-danger mb-0">{{ recipe.title }}</h1>
+                        <h4 class="text-muted">{{ recipe.country.name }}</h4>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'toggle_favorite' recipe.pk %}" class="btn {% if is_favorite %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                            {% if is_favorite %}♥ Favorited{% else %}♡ Favorite{% endif %}
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    {% for tag in recipe.dietary_tags.all %}
+                        <span class="badge rounded-pill bg-info text-dark">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="mb-4">
+                    <h5>Average Rating: <span class="text-warning">{{ recipe.average_rating|floatformat:1 }} / 5.0</span></h5>
+
+                    {% if user.is_authenticated %}
+                        <form method="post" action="{% url 'rate_recipe' recipe.pk %}" class="d-flex align-items-center">
+                            {% csrf_token %}
+                            <div class="btn-group me-2" role="group">
+                                {% for star in stars %}
+                                    <button type="submit" name="score" value="{{ star }}" class="btn btn-sm btn-outline-warning">
+                                        {{ star }} ★
+                                    </button>
+                                {% endfor %}
+                            </div>
+                            <small class="text-muted">Rate this recipe!</small>
+                        </form>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Ingredients</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for ingredient in recipe.ingredients.all %}
+                            <li class="list-group-item">{{ ingredient.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Instructions</h5>
+                    <p class="card-text" style="white-space: pre-wrap;">{{ recipe.instructions|default:"No instructions provided." }}</p>
+                </div>
+
+                {% if recipe.calories or recipe.protein or recipe.carbs or recipe.fat %}
+                <div class="mb-4">
+                    <h5>Nutritional Information <small class="text-muted">(per serving)</small></h5>
+                    <div class="row text-center">
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <strong>{{ recipe.calories|default:"0" }}</strong><br><small>Calories</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <strong>{{ recipe.protein|default:"0" }}g</strong><br><small>Protein</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <strong>{{ recipe.carbs|default:"0" }}g</strong><br><small>Carbs</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-2 border rounded bg-light">
+                                <strong>{{ recipe.fat|default:"0" }}g</strong><br><small>Fat</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="text-muted small">
+                    Added by: {{ recipe.author.username|default:"Anonymous" }} | {{ recipe.created_at|date:"M d, Y" }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
